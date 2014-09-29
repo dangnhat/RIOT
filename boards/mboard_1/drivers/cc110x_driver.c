@@ -12,6 +12,9 @@
 /* drivers  */
 #include "cc110x_ng.h"
 
+#define ENABLE_DEBUG (0)
+#include "debug.h"
+
 #define CC110x_GET_GDO0()			(gpio_read(GDO0_DEV))
 #define CC110x_GET_GDO2()			(gpio_read(GDO2_DEV))
 #define CC110x_GET_GDO1_MISO()		(gpio_read(SPI_0_MISO_GPIO))
@@ -36,84 +39,52 @@ int cc110x_get_gdo2(void)
 {
     return CC110x_GET_GDO2();
 }
-static
-void init_gpio_spi(void)
+
+void spi_init_gpio(void)
 {
 	/* Configure MISO pin */
 	gpio_init_in(SPI_0_MISO_GPIO, GPIO_NOPULL);
 
 	/* Configure MOSI pin */
 	gpio_init_out(SPI_0_MOSI_GPIO, GPIO_PULLUP);
+	SPI_0_MOSI_PORT->CRL |= (0xb << (SPI_0_MOSI_PIN * 4));
 
 	/* Configure SCLK pin */
 	gpio_init_out(SPI_0_SCLK_GPIO, GPIO_PULLUP);
+	SPI_0_SCLK_PORT->CRL |= (0xb << (SPI_0_SCLK_PIN * 4));
 
 	/* Configure CSn pin */
-	gpio_init_out(SPI_0_CS_GPIO, GPIO_PULLUP);
+	gpio_init_out(SPI_0_CS_GPIO, GPIO_NOPULL);
 }
 
 void cc110x_spi_init(void)
 {
-	init_gpio_spi();
+	int retval = 0;
 
-	spi_init_master(SPI_DEV, SPI_CONF_FIRST_FALLING, SPI_SPEED_5MHZ);
+	DEBUG("DBG: cc110x_driver.c cc110x_spi_init()\n");
+	spi_init_gpio();
+
+	retval = spi_init_master(SPI_DEV, SPI_CONF_FIRST_RISING, SPI_SPEED_1MHZ);
+	if (retval < 0) {
+		puts("Can't initialize SPI!\n");
+		return;
+	}
+	/* Disable SPI interrupt */
+	SPI_0_DEV->CR2 &= 0x0;
 
 	spi_poweron(SPI_DEV);
-
-//	GPIO_InitTypeDef GPIO_InitStructure;
-//	SPI_InitTypeDef SPI_InitStructure;
-//
-//	/* RCC */
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-//
-//	/* GPIO */
-//	/* Configure SPI MASTER pins */
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);
-//
-//	/*
-//	 * SPI
-//	 * NOTE: APB2 is 72MHz, prescaler 16 => SPI @ 4.5 MHz, radio spi max is 7.5MHz
-//	 * Clock idle low, rising edge
-//	 */
-//	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-//	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-//	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-//	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
-//	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
-//	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-//	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
-//	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
-//	SPI_InitStructure.SPI_CRCPolynomial = 7;
-//	SPI_Init(SPI1, &SPI_InitStructure);
-//
-//	/* Enable SPI */
-//	SPI_Cmd(SPI1, ENABLE);
 }
 
 uint8_t cc110x_txrx(uint8_t value)
 {
-    uint8_t retval = 0;
+    while ((SPI_0_DEV->SR & SPI_SR_TXE) == RESET);
+    SPI_0_DEV->DR = value;
 
-    spi_transfer_byte(SPI_DEV, retval, (char *)&value);
-
-    return retval;
+	while ((SPI_0_DEV->SR & SPI_SR_RXNE) == RESET);
+	return SPI_0_DEV->DR;
 }
 
-void spi_cs(void)
+void cc110x_spi_cs(void)
 {
 	SPI_SELECT();
 }
@@ -128,14 +99,14 @@ void cc110x_spi_select(void)
 	volatile int retry_count = 0;
 	volatile int abort_count;
 
-    spi_cs();	//CS to low
-    while(CC110x_GET_GDO1_MISO()) {
-    	spi_cs();
+	cc110x_spi_cs();	//CS to low
+    while(CC110x_GET_GDO1_MISO() != 0) {
+    	cc110x_spi_cs();
 		abort_count++;
 		if (abort_count > CC110x_MISO_LOW_COUNT) {
 			retry_count++;
 			if (retry_count > CC110x_MISO_LOW_RETRY) {
-				puts("[CC1100 SPI] fatal error\n");
+				puts("[CC110x SPI] fatal error\n");
 				return;
 			}
 			cc110x_spi_unselect();		// CS to high
@@ -168,7 +139,6 @@ void cc110x_gdo2_enable(void)
 void cc110x_gdo0_disable(void)
 {
 	gpio_irq_disable(GDO0_DEV);
-
 }
 
 void cc110x_gdo2_disable(void)
@@ -176,51 +146,26 @@ void cc110x_gdo2_disable(void)
 	gpio_irq_disable(GDO2_DEV);
 }
 
-void init_interrupt(void)
+void gpio_init_interrupt(void)
 {
+	int retval = 0;
+
 	/* Initialize interrupt for GDO0 */
-	gpio_init_int(GDO0_DEV, GPIO_NOPULL, GPIO_RISING, (void*)&cc110x_gdo0_irq, NULL);
+	retval = gpio_init_int(GDO0_DEV, GPIO_PULLUP, GPIO_RISING, (gpio_cb_t)cc110x_gdo0_irq, NULL);
+	if (retval < 0) {
+		puts("Can't initialize GPIO interrupt!\n");
+		return;
+	}
 
 	/* Initialize interrupt for GDO2 */
-	gpio_init_int(GDO2_DEV, GPIO_NOPULL, GPIO_FALLING, (void*)&cc110x_gdo2_irq, NULL);
-
-//	GPIO_InitTypeDef GPIO_InitStructure;
-//	NVIC_InitTypeDef NVIC_InitStructure;
-//
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-//	GPIO_Init(GPIOB, &GPIO_InitStructure);
-//
-//	/* Enable AFIO clock */
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-//
-//	/* Connect EXTI0 and EXTI1 Line to PB0 and PB1 pin */
-//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);
-//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource1);
-//
-//	/* Configure EXTI0 and EXTI1 line */
-//	enable_EXTI_interrupt(EXTI_Trigger_Rising, GDO0_line);
-//	enable_EXTI_interrupt(EXTI_Trigger_Falling, GDO2_line);
-//
-//	/* Enable and set EXTI4 Interrupt to the lowest priority */
-//	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
-//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
-//	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x00;
-//	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-//	NVIC_Init(&NVIC_InitStructure);
-//
-//	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
-//	NVIC_Init(&NVIC_InitStructure);
+	retval = gpio_init_int(GDO2_DEV, GPIO_PULLUP, GPIO_FALLING, (gpio_cb_t)cc110x_gdo2_irq, NULL);
+	if (retval < 0) {
+		puts("Can't initialize GPIO interrupt!\n");
+		return;
+	}
 }
 
 void cc110x_init_interrupts(void)
 {
-	init_interrupt();
+	gpio_init_interrupt();
 }
-
-//extern void cc110x_gdo0_irq(void);
-
-//extern void cc110x_gdo2_irq(void);

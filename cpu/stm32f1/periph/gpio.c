@@ -39,6 +39,7 @@ static gpio_state_t config[GPIO_NUMOF];
 
 int gpio_init_out(gpio_t dev, gpio_pp_t pullup)
 {
+	DEBUG("gpio_init_out\n");
     GPIO_TypeDef *port;
     uint32_t pin;
 
@@ -301,7 +302,7 @@ int gpio_init_in(gpio_t dev, gpio_pp_t pullup)
         port->CRL |= (0x4 << (4 * pin));
     }
     else {
-        port->CRL &= ~(0xf << (4 * pin));
+        port->CRH &= ~(0xf << (4 * (pin-8)));
         port->CRH |= (0x4 << (4 * (pin-8)));
     }
 

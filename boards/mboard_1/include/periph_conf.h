@@ -202,7 +202,7 @@
 /* GPIO channel 8 config */
 #define GPIO_8_PORT         GPIOA
 #define GPIO_8_PIN          5		/* SCLK */
-#define GPIO_8_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+#define GPIO_8_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN)
 #define GPIO_8_EXTI_CFG()   (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PA)	/* don't care if not use interrupt */
 #define GPIO_8_EXTI_LINE    4			/* don't care if not use interrupt */
 #define GPIO_8_IRQ          EXTI4_IRQn	/* don't care if not use interrupt */
@@ -216,7 +216,7 @@
 /* GPIO channel 10 config */
 #define GPIO_10_PORT        GPIOA
 #define GPIO_10_PIN         7		/* MOSI */
-#define GPIO_10_CLKEN()     (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+#define GPIO_10_CLKEN()     (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN)
 #define GPIO_10_EXTI_CFG()  (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI7_PA)	/* don't care if not use interrupt */
 #define GPIO_10_EXTI_LINE   4			/* don't care if not use interrupt */
 #define GPIO_10_IRQ         EXTI4_IRQn	/* don't care if not use interrupt */
