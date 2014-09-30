@@ -356,7 +356,7 @@ static void reset(void)
     cc110x_spi_select();
 #endif
     cc110x_strobe(CC1100_SRES);
-    hwtimer_wait(RTIMER_TICKS(100));
+    hwtimer_wait(RTIMER_TICKS(1000));
 }
 
 static void power_up_reset(void)

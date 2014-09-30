@@ -39,6 +39,7 @@ static gpio_state_t config[GPIO_NUMOF];
 
 int gpio_init_out(gpio_t dev, gpio_pp_t pullup)
 {
+	DEBUG("gpio_init_out\n");
     GPIO_TypeDef *port;
     uint32_t pin;
 
@@ -301,7 +302,7 @@ int gpio_init_in(gpio_t dev, gpio_pp_t pullup)
         port->CRL |= (0x4 << (4 * pin));
     }
     else {
-        port->CRL &= ~(0xf << (4 * pin));
+        port->CRH &= ~(0xf << (4 * (pin-8)));
         port->CRH |= (0x4 << (4 * (pin-8)));
     }
 
@@ -480,6 +481,7 @@ int gpio_init_int(gpio_t dev, gpio_pp_t pullup, gpio_flank_t flank, gpio_cb_t cb
 
     /* set callback */
     config[gpio_irq].cb = cb;
+    config[gpio_irq].arg = arg;
 
     /* configure the event that triggers an interrupt */
     switch (flank) {
@@ -507,7 +509,7 @@ int gpio_init_int(gpio_t dev, gpio_pp_t pullup, gpio_flank_t flank, gpio_cb_t cb
 
 void gpio_irq_enable(gpio_t dev)
 {
-    uint8_t exti_line;
+    uint8_t exti_line = -1;
 
     switch(dev) {
 #ifdef GPIO_0_EN
@@ -590,6 +592,10 @@ void gpio_irq_enable(gpio_t dev)
             exti_line = GPIO_15_EXTI_LINE;
             break;
 #endif
+    }
+
+    if(exti_line == -1) {
+    	return;
     }
     /* save state */
     // int state = (EXTI->IMR & (1 << exti_line) >> exti_line);
@@ -602,7 +608,7 @@ void gpio_irq_enable(gpio_t dev)
 
 void gpio_irq_disable(gpio_t dev)
 {
-    uint8_t exti_line;
+    uint8_t exti_line = -1;
 
     switch(dev) {
 #ifdef GPIO_0_EN
@@ -686,10 +692,14 @@ void gpio_irq_disable(gpio_t dev)
             break;
 #endif
     }
+
+    if(exti_line == -1) {
+      	return;
+    }
     // /* save state */
     // int state = ((EXTI->IMR & (1 << exti_line)) >> exti_line);
 
-    /* unmask the pins interrupt channel */
+    /* mask the pins interrupt channel */
     EXTI->IMR &= ~(1 << exti_line);
 
     return;
