@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Freie Universität Berlin
+ * Copyright (C) 2014 Freie Universität Berlin, Ho Chi Minh City University of Technology
  *
  * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License v2.1. See the file LICENSE in the top level directory for more
@@ -13,6 +13,7 @@
  * @file        periph_conf.h
  * @brief       Peripheral MCU configuration for the MBoard1 board
  *
+ * @author		Thomas Eichinger <thomas.eichinger@fu-berlin.de>
  * @author      Hien Van Nguyen <nvhien1992@gmail.com>
  */
 #ifndef __PERIPH_CONF_H

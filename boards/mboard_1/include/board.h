@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Freie Universität Berlin
+ * Copyright (C) 2014 Freie Universität Berlin, Ho Chi Minh City University of Technology
  *
  * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License v2.1. See the file LICENSE in the top level directory for more
@@ -7,18 +7,19 @@
  */
 
 /**
- * @defgroup    board_iot-lab_M3 iot-lab_M3
+ * @defgroup    mboard1
  * @ingroup     boards
- * @brief       Board specific files for the iot-lab_M3 board.
+ * @brief       Board specific files for the MBoard1 board.
  * @{
  *
  * @file
- * @brief       Board specific definitions for the iot-lab_M3 board.
+ * @brief       Board specific definitions for the MBoard1 board.
  *
  * @author      Alaeddine Weslati <alaeddine.weslati@inria.fr>
  * @author      Thomas Eichinger <thomas.eichinger@fu-berlin.de>
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
+ * @author      Hien Van Nguyen <nvhien1992@gmail.com>
  */
 
 #ifndef BOARD_H_
