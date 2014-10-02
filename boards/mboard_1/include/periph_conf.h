@@ -14,6 +14,7 @@
  * @brief       Peripheral MCU configuration for the MBoard1 board
  *
  * @author		Thomas Eichinger <thomas.eichinger@fu-berlin.de>
+ * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  * @author      Hien Van Nguyen <nvhien1992@gmail.com>
  */
 #ifndef __PERIPH_CONF_H
@@ -23,7 +24,7 @@
  * @name Clock system configuration
  * @{
  **/
-#define CLOCK_HSE           (16000000U)             /* frequency of external oscillator */
+#define CLOCK_HSE           (8000000U)             /* frequency of external oscillator */
 #define CLOCK_CORECLOCK     (72000000U)             /* targeted core clock frequency */
 /* configuration of PLL prescaler and multiply values */
 /* CORECLOCK := HSE / PLL_HSE_DIV * PLL_HSE_MUL */
@@ -99,9 +100,9 @@
 #define GPIO_5_EN           0        /* not configured */
 #define GPIO_6_EN           1        /* GDO0 */
 #define GPIO_7_EN           1        /* GDO2 */
-#define GPIO_8_EN           1        /* SCLK */
-#define GPIO_9_EN           1        /* MISO */
-#define GPIO_10_EN          1        /* MOSI */
+#define GPIO_8_EN           0        /* not configured */
+#define GPIO_9_EN           0        /* not configured */
+#define GPIO_10_EN          0        /* not configured */
 #define GPIO_11_EN          1        /* CSn */
 #define GPIO_12_EN          0        /* not configured */
 #define GPIO_13_EN          0        /* not configured */
@@ -265,6 +266,7 @@
 
 /**
  * @brief SPI configuration
+ * @{
  */
 #define SPI_NUMOF       (1U)
 #define SPI_0_EN        1
@@ -287,6 +289,7 @@
 #define SPI_0_MISO_PORT         GPIOA
 #define SPI_0_MISO_PIN          6
 #define SPI_0_MISO_PORT_CLKEN() (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+/** @} */
 
 #endif /* __PERIPH_CONF_H */
 /** @} */
