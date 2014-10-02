@@ -508,20 +508,19 @@ static void test_map_invalid(void)
 static void test_semantic_tagging(void)
 {
     char buffer[128];
-    {
-        const char *input = "1";
-        /* CBOR: byte string of length 1 marked with a tag to indicate it is a positive bignum */
-        /* byte 1: (major type 6, additional information */
-        /* byte 2: (major type 2, additional 1 for the length) */
-        /* byte 3: bytes representing the bignum */
-        unsigned char data[] = {0xc2, 0x41, 0x31};
-        TEST_ASSERT(cbor_write_tag(&stream, 2)); /* write byte 1 */
-        TEST_ASSERT(cbor_serialize_byte_string(&stream, input)); /* write byte 2 and 3 */
-        CBOR_CHECK_SERIALIZED(stream, data, sizeof(data));
-        TEST_ASSERT(cbor_at_tag(&stream, 0));
-        TEST_ASSERT(cbor_deserialize_byte_string(&stream, 1, buffer, sizeof(buffer)));
-        CBOR_CHECK_DESERIALIZED(input, buffer, EQUAL_STRING);
-    }
+
+    const char *input = "1";
+    /* CBOR: byte string of length 1 marked with a tag to indicate it is a positive bignum */
+    /* byte 1: (major type 6, additional information */
+    /* byte 2: (major type 2, additional 1 for the length) */
+    /* byte 3: bytes representing the bignum */
+    unsigned char data[] = {0xc2, 0x41, 0x31};
+    TEST_ASSERT(cbor_write_tag(&stream, 2)); /* write byte 1 */
+    TEST_ASSERT(cbor_serialize_byte_string(&stream, input)); /* write byte 2 and 3 */
+    CBOR_CHECK_SERIALIZED(stream, data, sizeof(data));
+    TEST_ASSERT(cbor_at_tag(&stream, 0));
+    TEST_ASSERT(cbor_deserialize_byte_string(&stream, 1, buffer, sizeof(buffer)));
+    CBOR_CHECK_DESERIALIZED(input, buffer, EQUAL_STRING);
 }
 
 #ifndef CBOR_NO_CTIME
@@ -590,6 +589,7 @@ static void test_float_half(void)
     /* check border conditions */
     CBOR_CHECK(float, float_half, stream, -.0f, HEX_LITERAL(0xf9, 0x80, 0x00), EQUAL_FLOAT);
     CBOR_CHECK(float, float_half, stream, .0f, HEX_LITERAL(0xf9, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(float, float_half, stream, INFINITY, HEX_LITERAL(0xf9, 0x7c, 0x00), EQUAL_FLOAT);
     /* TODO: Broken: encode_float_half issue? */
     /*CBOR_CHECK(float, float_half, stream, NAN, HEX_LITERAL(0xf9, 0x7e, 0x00), EQUAL_FLOAT);*/
@@ -619,10 +619,14 @@ static void test_float(void)
     /* check border conditions */
     CBOR_CHECK(float, float, stream, .0f,
                HEX_LITERAL(0xfa, 0x00, 0x00, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(float, float, stream, INFINITY,
+    /* cppcheck-suppress nanInArithmeticExpression */
                HEX_LITERAL(0xfa, 0x7f, 0x80, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(float, float, stream, NAN,
                HEX_LITERAL(0xfa, 0x7f, 0xc0, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(float, float, stream, -INFINITY,
                HEX_LITERAL(0xfa, 0xff, 0x80, 0x00, 0x00), EQUAL_FLOAT);
 
@@ -647,10 +651,14 @@ static void test_double(void)
     /* check border conditions */
     CBOR_CHECK(double, double, stream, .0f,
                HEX_LITERAL(0xfb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(double, double, stream, INFINITY,
+    /* cppcheck-suppress nanInArithmeticExpression */
                HEX_LITERAL(0xfb, 0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(double, double, stream, NAN,
                HEX_LITERAL(0xfb, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00), EQUAL_FLOAT);
+    /* cppcheck-suppress nanInArithmeticExpression */
     CBOR_CHECK(double, double, stream, -INFINITY,
                HEX_LITERAL(0xfb, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00), EQUAL_FLOAT);
 
