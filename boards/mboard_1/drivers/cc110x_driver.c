@@ -34,13 +34,15 @@
 
 #define CC110x_GET_GDO0()            (gpio_read(GDO0_DEV))
 #define CC110x_GET_GDO2()            (gpio_read(GDO2_DEV))
-#define CC110x_GET_GDO1_MISO()        (gpio_read(SPI_0_MISO_GPIO))
+#define CC110x_GET_GDO1_MISO()        (gpio_read(CC1101_MISO))
 
-#define SPI_SELECT()        (gpio_clear(SPI_0_CS_GPIO))
-#define SPI_UNSELECT()        (gpio_set(SPI_0_CS_GPIO))
+#define SPI_SELECT()        (gpio_clear(CC1101_CS))
+#define SPI_UNSELECT()        (gpio_set(CC1101_CS))
 
 #define CC110x_MISO_LOW_RETRY        (100)        // max. retries for MISO to go low
 #define CC110x_MISO_LOW_COUNT        (2700)        // loop count (timeout ~ 500 us) to wait
+
+void gpio_init_interrupt(void);
 
 int cc110x_get_gdo0(void)
 {
@@ -57,31 +59,15 @@ int cc110x_get_gdo2(void)
     return CC110x_GET_GDO2();
 }
 
-void spi_init_gpio(void)
-{
-    /* Configure MISO pin */
-    gpio_init_in(SPI_0_MISO_GPIO, GPIO_NOPULL);
-
-    /* Configure MOSI pin */
-    gpio_init_out(SPI_0_MOSI_GPIO, GPIO_PULLUP);
-    SPI_0_MOSI_PORT->CRL |= (0xb << (SPI_0_MOSI_PIN * 4));
-
-    /* Configure SCLK pin */
-    gpio_init_out(SPI_0_SCLK_GPIO, GPIO_PULLUP);
-    SPI_0_SCLK_PORT->CRL |= (0xb << (SPI_0_SCLK_PIN * 4));
-
-    /* Configure CSn pin */
-    gpio_init_out(SPI_0_CS_GPIO, GPIO_NOPULL);
-}
-
 void cc110x_spi_init(void)
 {
     int retval = 0;
 
     DEBUG("DBG: cc110x_driver.c cc110x_spi_init()\n");
-    spi_init_gpio();
+    /* Configure CSn pin */
+    gpio_init_out(CC1101_CS, GPIO_NOPULL);
 
-    retval = spi_init_master(SPI_DEV, SPI_CONF_FIRST_RISING, SPI_SPEED_1MHZ);
+    retval = spi_init_master(CC1101_SPI, SPI_CONF_FIRST_RISING, SPI_SPEED_1MHZ);
     if (retval < 0) {
         puts("Can't initialize SPI!\n");
         return;
@@ -89,7 +75,7 @@ void cc110x_spi_init(void)
     /* Disable SPI interrupt */
     SPI_0_DEV->CR2 &= 0x0;
 
-    spi_poweron(SPI_DEV);
+    spi_poweron(CC1101_SPI);
 }
 
 uint8_t cc110x_txrx(uint8_t value)
@@ -168,14 +154,14 @@ void gpio_init_interrupt(void)
     int retval = 0;
 
     /* Initialize interrupt for GDO0 */
-    retval = gpio_init_int(GDO0_DEV, GPIO_PULLUP, GPIO_RISING, (gpio_cb_t)cc110x_gdo0_irq, NULL);
+    retval = gpio_init_int(CC1101_GDO0, GPIO_PULLUP, GPIO_RISING, (gpio_cb_t)cc110x_gdo0_irq, NULL);
     if (retval < 0) {
         puts("Can't initialize GPIO interrupt!\n");
         return;
     }
 
     /* Initialize interrupt for GDO2 */
-    retval = gpio_init_int(GDO2_DEV, GPIO_PULLUP, GPIO_FALLING, (gpio_cb_t)cc110x_gdo2_irq, NULL);
+    retval = gpio_init_int(CC1101_GDO2, GPIO_PULLUP, GPIO_FALLING, (gpio_cb_t)cc110x_gdo2_irq, NULL);
     if (retval < 0) {
         puts("Can't initialize GPIO interrupt!\n");
         return;

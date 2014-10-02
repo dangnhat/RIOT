@@ -56,9 +56,10 @@
  * @{
  */
 #define CC1101_SPI      SPI_0
-#define CC1101_CS     	GPIO_11
 #define CC1101_GDO0		GPIO_6
 #define CC1101_GDO2		GPIO_7
+#define CC1101_MISO		GPIO_9
+#define CC1101_CS     	GPIO_11
 /** @} */
 
 /**

@@ -109,7 +109,7 @@
 #define GPIO_6_EN           1        /* GDO0 */
 #define GPIO_7_EN           1        /* GDO2 */
 #define GPIO_8_EN           0        /* not configured */
-#define GPIO_9_EN           0        /* not configured */
+#define GPIO_9_EN           1        /* MISO */
 #define GPIO_10_EN          0        /* not configured */
 #define GPIO_11_EN          1        /* CSn */
 #define GPIO_12_EN          0        /* not configured */
@@ -286,8 +286,8 @@
 #define SPI_0_BUS_DIV       	1   /* 1 -> SPI runs with full CPU clock, 0 -> half CPU clock */
 
 /* Define channel/pin/port for SCLK */
-#define SPI_0_SCLK_PORT     	GPIOA
-#define SPI_0_SCLK_PIN      	5
+#define SPI_0_CLK_PORT     		GPIOA
+#define SPI_0_CLK_PIN      		5
 #define SPI_0_CLK_PORT_CLKEN()  (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
 /* Define channel/pin/port for MISO */
 #define SPI_0_MOSI_PORT         GPIOA
