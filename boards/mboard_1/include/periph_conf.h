@@ -14,6 +14,7 @@
  * @brief       Peripheral MCU configuration for the MBoard1 board
  *
  * @author		Thomas Eichinger <thomas.eichinger@fu-berlin.de>
+ * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  * @author      Hien Van Nguyen <nvhien1992@gmail.com>
  */
 #ifndef __PERIPH_CONF_H
@@ -23,7 +24,7 @@
  * @name Clock system configuration
  * @{
  **/
-#define CLOCK_HSE           (16000000U)             /* frequency of external oscillator */
+#define CLOCK_HSE           (8000000U)             /* frequency of external oscillator */
 #define CLOCK_CORECLOCK     (72000000U)             /* targeted core clock frequency */
 /* configuration of PLL prescaler and multiply values */
 /* CORECLOCK := HSE / PLL_HSE_DIV * PLL_HSE_MUL */
@@ -107,9 +108,9 @@
 #define GPIO_5_EN           0        /* not configured */
 #define GPIO_6_EN           1        /* GDO0 */
 #define GPIO_7_EN           1        /* GDO2 */
-#define GPIO_8_EN           1        /* SCLK */
-#define GPIO_9_EN           1        /* MISO */
-#define GPIO_10_EN          1        /* MOSI */
+#define GPIO_8_EN           0        /* not configured */
+#define GPIO_9_EN           0        /* not configured */
+#define GPIO_10_EN          0        /* not configured */
 #define GPIO_11_EN          1        /* CSn */
 #define GPIO_12_EN          0        /* not configured */
 #define GPIO_13_EN          0        /* not configured */
@@ -120,21 +121,21 @@
 
 /* Define GPIO attributes for GDO0 and GDO2 */
 #define GDO0_DEV            GPIO_6        //set channel
-#define GDO0_PORT            GPIOB        //GPIOC
-#define GDO0_PIN            0            //5
-#define GDO0_EXTI_LINE        GDO0_PIN
+#define GDO0_PORT           GPIOB        //GPIOC
+#define GDO0_PIN            0            //7
+#define GDO0_EXTI_LINE      GDO0_PIN
 #define GDO0_CLKEN()        (RCC->APB2ENR |= RCC_APB2ENR_IOPBEN)         //(RCC->APB2ENR |= RCC_APB2ENR_IOPCEN)
-#define GDO0_EXTI_CFG()       (AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PB)    //(AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PC)
-#define GDO0_IRQ_INDEX        GPIO_0        //GPIO_5
+#define GDO0_EXTI_CFG()     (AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PB)    //(AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI7_PC)
+#define GDO0_IRQ_INDEX      GPIO_0        //GPIO_7
 #define GDO0_IRQ_HANDLER    EXTI0_IRQn    //EXTI9_5_IRQn
 
 #define GDO2_DEV            GPIO_7        //set channel
-#define GDO2_PORT            GPIOB        //GPIOC
+#define GDO2_PORT           GPIOB        //GPIOC
 #define GDO2_PIN            1            //11
-#define GDO2_EXTI_LINE        GDO2_PIN
+#define GDO2_EXTI_LINE      GDO2_PIN
 #define GDO2_CLKEN()        (RCC->APB2ENR |= RCC_APB2ENR_IOPBEN)        //(RCC->APB2ENR |= RCC_APB2ENR_IOPCEN)
-#define GDO2_EXTI_CFG()       (AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI1_PB)    //(AFIO->EXTICR[2] |= AFIO_EXTICR3_EXTI11_PC)
-#define GDO2_IRQ_INDEX        GPIO_1        //GPIO_11
+#define GDO2_EXTI_CFG()     (AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI1_PB)    //(AFIO->EXTICR[2] |= AFIO_EXTICR3_EXTI11_PC)
+#define GDO2_IRQ_INDEX      GPIO_1        //GPIO_11
 #define GDO2_IRQ_HANDLER    EXTI1_IRQn    //EXTI15_10_IRQn
 
 /* IRQ configurations that are the index of callback function in the callback function table.
@@ -215,25 +216,25 @@
 #define GPIO_7_IRQ          GDO2_IRQ_HANDLER
 /* GPIO channel 8 config */
 #define GPIO_8_PORT         GPIOA
-#define GPIO_8_PIN          5        /* SCLK */
-#define GPIO_8_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN)
-#define GPIO_8_EXTI_CFG()   (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PA)    /* don't care if not use interrupt */
-#define GPIO_8_EXTI_LINE    4            /* don't care if not use interrupt */
-#define GPIO_8_IRQ          EXTI4_IRQn    /* don't care if not use interrupt */
+#define GPIO_8_PIN          5
+#define GPIO_8_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+#define GPIO_8_EXTI_CFG()   (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PA)
+#define GPIO_8_EXTI_LINE    4
+#define GPIO_8_IRQ          EXTI4_IRQn
 /* GPIO channel 9 config */
 #define GPIO_9_PORT         GPIOA
-#define GPIO_9_PIN          6        /* MISO */
+#define GPIO_9_PIN          6
 #define GPIO_9_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
-#define GPIO_9_EXTI_CFG()   (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI6_PA)    /* don't care if not use interrupt */
-#define GPIO_9_EXTI_LINE    4            /* don't care if not use interrupt */
-#define GPIO_9_IRQ          EXTI4_IRQn    /* don't care if not use interrupt */
+#define GPIO_9_EXTI_CFG()   (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI6_PA)
+#define GPIO_9_EXTI_LINE    4
+#define GPIO_9_IRQ          EXTI4_IRQn
 /* GPIO channel 10 config */
 #define GPIO_10_PORT        GPIOA
-#define GPIO_10_PIN         7        /* MOSI */
-#define GPIO_10_CLKEN()     (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN)
-#define GPIO_10_EXTI_CFG()  (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI7_PA)    /* don't care if not use interrupt */
-#define GPIO_10_EXTI_LINE   4            /* don't care if not use interrupt */
-#define GPIO_10_IRQ         EXTI4_IRQn    /* don't care if not use interrupt */
+#define GPIO_10_PIN         7
+#define GPIO_10_CLKEN()     (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+#define GPIO_10_EXTI_CFG()  (AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI7_PA)
+#define GPIO_10_EXTI_LINE   4
+#define GPIO_10_IRQ         EXTI4_IRQn
 /* GPIO channel 11 config */
 #define GPIO_11_PORT        GPIOA
 #define GPIO_11_PIN         4        /* CSn */
@@ -273,45 +274,30 @@
 
 /**
  * @brief SPI configuration
+ * @{
  */
-#define SPI_NUMOF       1
+#define SPI_NUMOF       (1U)
 #define SPI_0_EN        1
 
-#define SPI_0_DEV       SPI1
-#define SPI_DEV            SPI_0
-
-#define SPI_0_CLKEN()       (RCC->APB2ENR |= RCC_APB2ENR_SPI1EN)
-#define SPI_0_CLKDIS()      (RCC->APB2ENR &= ~(RCC_APB2ENR_SPI1EN))
+/* SPI 0 device configuration */
+#define SPI_0_DEV       		SPI1
+#define SPI_0_CLKEN()       	(RCC->APB2ENR |= RCC_APB2ENR_SPI1EN)
+#define SPI_0_CLKDIS()      	(RCC->APB2ENR &= ~(RCC_APB2ENR_SPI1EN))
+#define SPI_0_BUS_DIV       	1   /* 1 -> SPI runs with full CPU clock, 0 -> half CPU clock */
 
 /* Define channel/pin/port for SCLK */
-#define SPI_0_SCLK_GPIO     GPIO_8
-#define SPI_0_SCLK_PIN      GPIO_8_PIN
-#define SPI_0_SCLK_PORT     GPIO_8_PORT
+#define SPI_0_SCLK_PORT     	GPIOA
+#define SPI_0_SCLK_PIN      	5
+#define SPI_0_CLK_PORT_CLKEN()  (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
 /* Define channel/pin/port for MISO */
-#define SPI_0_MISO_GPIO     GPIO_9
-#define SPI_0_MISO_PIN      GPIO_9_PIN
-#define SPI_0_MISO_PORT     GPIO_9_PORT
+#define SPI_0_MOSI_PORT         GPIOA
+#define SPI_0_MOSI_PIN          7
+#define SPI_0_MOSI_PORT_CLKEN() (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
 /* Define channel/pin/port for MOSI */
-#define SPI_0_MOSI_GPIO     GPIO_10
-#define SPI_0_MOSI_PIN      GPIO_10_PIN
-#define SPI_0_MOSI_PORT     GPIO_10_PORT
-/* Define channel/pin/port for CSn */
-#define SPI_0_CS_GPIO       GPIO_11
-#define SPI_0_CS_PIN        GPIO_11_PIN
-#define SPI_0_CS_PORT       GPIO_11_PORT
-
-#define SPI_2_LINES_FULL_DUPLEX     (0x0000)
-#define SPI_MASTER_MODE             (0x0104)
-#define SPI_DATA_SIZE_8B            (0x0000)
-#define SPI_CPOL_LOW                (0x0000)
-#define SPI_CPHA_1_EDGE             (0x0000)
-#define SPI_NSS_SOFT                (0x0200)
-#define SPI_BR_PRESCALER_8          (0x0010)
-#define SPI_BR_PRESCALER_16         (0x0018)
-#define SPI_BR_PRESCALER_64         (0x0028)
-#define SPI_BR_PRESCALER_128        (0x0030)
-#define SPI_BR_PRESCALER_256        (0x0038)
-#define SPI_1ST_BIT_MSB             (0x0000)
+#define SPI_0_MISO_PORT         GPIOA
+#define SPI_0_MISO_PIN          6
+#define SPI_0_MISO_PORT_CLKEN() (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+/** @} */
 
 #endif /* __PERIPH_CONF_H */
 /** @} */

@@ -30,6 +30,7 @@
 #include "periph_conf.h"
 
 #include "cpu.h"
+#include "periph_conf.h"
 
 /**
  * Define the nominal CPU core clock in this board
@@ -42,12 +43,23 @@
  */
 #define STDIO               UART_0
 #define STDIO_BAUDRATE      (115200)
+#define STDIO_RX_BUFSIZE    (64U)
 /** @} */
 
 /**
  * Assign the hardware timer
  */
 #define HW_TIMER            TIMER_0
+
+/**
+ * @name Define the interface to the CC1101 radio
+ * @{
+ */
+#define CC1101_SPI      SPI_0
+#define CC1101_CS     	GPIO_11
+#define CC1101_GDO0		GPIO_6
+#define CC1101_GDO2		GPIO_7
+/** @} */
 
 /**
  * @name LED pin definitions
