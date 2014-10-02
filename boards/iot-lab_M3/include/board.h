@@ -49,7 +49,7 @@
 #define HW_TIMER            TIMER_0
 
 /**
- * @name Define the interface to the AT86RF231 radio
+ * @name Define the interface to the CC1101 radio
  * @{
  */
 #define AT86RF231_SPI       SPI_0

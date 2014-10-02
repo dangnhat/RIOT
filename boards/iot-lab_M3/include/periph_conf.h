@@ -150,7 +150,7 @@
 #define GPIO_IRQ_15         GPIO_11
 
 /* GPIO channel 0 config */
-#define GPIO_0_PORT         GPIOA                   /* Used for user button 1 */
+#define GPIO_0_PORT         GPIOA
 #define GPIO_0_PIN          3
 #define GPIO_0_CLKEN()      (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
 #define GPIO_0_EXTI_CFG()   (AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI3_PA)
