@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014 Freie Universität Berlin
+ * Copyright (C) 2014 Ho Chi Minh University of Technology
  *
  * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License v2.1. See the file LICENSE in the top level directory for more
@@ -7,30 +8,25 @@
  */
 
 /**
- * @ingroup     board_iot-lab_M3
+ * @ingroup     board_mboard_1
  * @{
  *
  * @file        board.c
- * @brief       Board specific implementations for the iot-lab_M3 board
+ * @brief       Board specific implementations for the mboard_1 board
  *
  * @author      Thomas Eichinger <thomas.eichinger@fu-berlin.de>
+ * @author      DangNhat Pham-Huu <phamhuudangnhat@gmail.com>
  *
  * @}
  */
 
-#include "cmsis_system.h"
 #include "board.h"
 #include "cpu.h"
 
-
 static void leds_init(void);
-
 
 void board_init(void)
 {
-    /* initialize core clocks via CMSIS function provided by ST */
-    SystemInit();
-
     /* initialize the CPU */
     cpu_init();
 

@@ -7,7 +7,7 @@
  */
 
 /**
- * @defgroup    mboard1
+ * @defgroup    board_mboard_1
  * @ingroup     boards
  * @brief       Board specific files for the MBoard1 board.
  * @{
@@ -20,12 +20,14 @@
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  * @author      Hien Van Nguyen <nvhien1992@gmail.com>
+ * @author      DangNhat Pham-Huu <phamhuudangnhat@gmail.com>
  */
 
 #ifndef BOARD_H_
 #define BOARD_H_
 
 #include <stdint.h>
+#include "periph_conf.h"
 
 #include "cpu.h"
 #include "periph_conf.h"
