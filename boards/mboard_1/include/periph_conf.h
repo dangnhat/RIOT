@@ -96,6 +96,19 @@
 #define UART_0_TX_PIN       9
 #define UART_0_AF           0
 
+/* UART 1 device configuration */
+#define UART_1_DEV          USART2
+#define UART_1_CLKEN()      (RCC->APB1ENR |= RCC_APB1ENR_USART2EN)
+#define UART_1_IRQ          USART2_IRQn
+#define UART_1_ISR          isr_usart2
+#define UART_1_BUS_FREQ     36000000
+/* UART 1 pin configuration */
+#define UART_1_PORT         GPIOA
+#define UART_1_PORT_CLKEN() (RCC->APB2ENR |= RCC_APB2ENR_IOPAEN)
+#define UART_1_RX_PIN       3
+#define UART_1_TX_PIN       2
+#define UART_1_AF           1
+
 /**
  * @brief present enable/disable GPIO channel configuration
  */
@@ -120,7 +133,6 @@
 #define GPIO_IRQ_PRIO       1        /* priority */
 
 /* Define GPIO attributes for GDO0 and GDO2 */
-#define GDO0_DEV            GPIO_6        //set channel
 #define GDO0_PORT           GPIOB        //GPIOC
 #define GDO0_PIN            0            //7
 #define GDO0_EXTI_LINE      GDO0_PIN
@@ -129,7 +141,6 @@
 #define GDO0_IRQ_INDEX      GPIO_0        //GPIO_7
 #define GDO0_IRQ_HANDLER    EXTI0_IRQn    //EXTI9_5_IRQn
 
-#define GDO2_DEV            GPIO_7        //set channel
 #define GDO2_PORT           GPIOB        //GPIOC
 #define GDO2_PIN            1            //11
 #define GDO2_EXTI_LINE      GDO2_PIN

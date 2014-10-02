@@ -32,8 +32,8 @@
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
-#define CC110x_GET_GDO0()            (gpio_read(GDO0_DEV))
-#define CC110x_GET_GDO2()            (gpio_read(GDO2_DEV))
+#define CC110x_GET_GDO0()            (gpio_read(CC1101_GDO0))
+#define CC110x_GET_GDO2()            (gpio_read(CC1101_GDO2))
 #define CC110x_GET_GDO1_MISO()        (gpio_read(CC1101_MISO))
 
 #define SPI_SELECT()        (gpio_clear(CC1101_CS))
@@ -42,7 +42,7 @@
 #define CC110x_MISO_LOW_RETRY        (100)        // max. retries for MISO to go low
 #define CC110x_MISO_LOW_COUNT        (2700)        // loop count (timeout ~ 500 us) to wait
 
-void gpio_init_interrupt(void);
+static void gpio_init_interrupt(void);
 
 int cc110x_get_gdo0(void)
 {
@@ -131,25 +131,25 @@ void cc110x_after_send(void)
 
 void cc110x_gdo0_enable(void)
 {
-    gpio_irq_enable(GDO0_DEV);
+    gpio_irq_enable(CC1101_GDO0);
 }
 
 void cc110x_gdo2_enable(void)
 {
-    gpio_irq_enable(GDO2_DEV);
+    gpio_irq_enable(CC1101_GDO2);
 }
 
 void cc110x_gdo0_disable(void)
 {
-    gpio_irq_disable(GDO0_DEV);
+    gpio_irq_disable(CC1101_GDO0);
 }
 
 void cc110x_gdo2_disable(void)
 {
-    gpio_irq_disable(GDO2_DEV);
+    gpio_irq_disable(CC1101_GDO2);
 }
 
-void gpio_init_interrupt(void)
+static void gpio_init_interrupt(void)
 {
     int retval = 0;
 
