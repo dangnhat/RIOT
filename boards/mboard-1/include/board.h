@@ -7,9 +7,9 @@
  */
 
 /**
- * @defgroup    board_iot-lab_M3 iot-lab_M3
+ * @defgroup    board_mboard-1 mboard-1
  * @ingroup     boards
- * @brief       Board specific files for the iot-lab_M3 board.
+ * @brief       Board specific files for the mboard-1board.
  * @{
  *
  * @file
@@ -47,46 +47,6 @@
  * Assign the hardware timer
  */
 #define HW_TIMER            TIMER_0
-
-/**
- * @name Define the interface to the AT86RF231 radio
- * @{
- */
-#define AT86RF231_SPI       SPI_0
-#define AT86RF231_CS        GPIO_11
-#define AT86RF231_INT       GPIO_12
-#define AT86RF231_RESET     GPIO_13
-#define AT86RF231_SLEEP     GPIO_14
-/** @} */
-
-/**
- * @name LED pin definitions
- * @{
- */
-#define LED_RED_PORT        (GPIOD)
-#define LED_RED_PIN         (2)
-#define LED_GREEN_PORT      (GPIOB)
-#define LED_GREEN_PIN       (5)
-#define LED_ORANGE_PORT     (GPIOC)
-#define LED_ORANGE_PIN      (10)
-/** @} */
-
-/**
- * @name Macros for controlling the on-board LEDs.
- * @{
- */
-#define LED_RED_ON          (LED_RED_PORT->ODR &= ~(1<<LED_RED_PIN))
-#define LED_RED_OFF         (LED_RED_PORT->ODR |= (1<<LED_RED_PIN))
-#define LED_RED_TOGGLE      (LED_RED_PORT->ODR ^= (1<<LED_RED_PIN))
-
-#define LED_GREEN_ON        (LED_GREEN_PORT->ODR &= ~(1<<LED_GREEN_PIN))
-#define LED_GREEN_OFF       (LED_GREEN_PORT->ODR |= (1<<LED_GREEN_PIN))
-#define LED_GREEN_TOGGLE    (LED_GREEN_PORT->ODR ^= (1<<LED_GREEN_PIN))
-
-#define LED_ORANGE_ON       (LED_ORANGE_PORT->ODR &= ~(1<<LED_ORANGE_PIN))
-#define LED_ORANGE_OFF      (LED_ORANGE_PORT->ODR |= (1<<LED_ORANGE_PIN))
-#define LED_ORANGE_TOGGLE   (LED_ORANGE_PORT->ODR ^= (1<<LED_ORANGE_PIN))
-/** @} */
 
 /**
  * Define the type for the radio packet length for the transceiver
