@@ -112,22 +112,22 @@
 /**
  * @brief present enable/disable GPIO channel configuration
  */
-#define GPIO_NUMOF          16
-#define GPIO_0_EN           0        /* not configured */
-#define GPIO_1_EN           0        /* not configured */
-#define GPIO_2_EN           0        /* not configured */
-#define GPIO_3_EN           0        /* not configured */
-#define GPIO_4_EN           0        /* not configured */
-#define GPIO_5_EN           0        /* not configured */
-#define GPIO_6_EN           1        /* GDO0 */
-#define GPIO_7_EN           1        /* GDO2 */
-#define GPIO_8_EN           0        /* not configured */
-#define GPIO_9_EN           1        /* MISO */
-#define GPIO_10_EN          0        /* not configured */
-#define GPIO_11_EN          1        /* CSn */
-#define GPIO_12_EN          0        /* not configured */
-#define GPIO_13_EN          0        /* not configured */
-#define GPIO_14_EN          0        /* not configured */
+#define GPIO_NUMOF          0
+#define GPIO_0_EN           0
+#define GPIO_1_EN           0
+#define GPIO_2_EN           0
+#define GPIO_3_EN           0
+#define GPIO_4_EN           0
+#define GPIO_5_EN           0
+#define GPIO_6_EN           0        /* GDO0 */
+#define GPIO_7_EN           0        /* GDO2 */
+#define GPIO_8_EN           0		 /* SCLK */
+#define GPIO_9_EN           0        /* MISO */
+#define GPIO_10_EN          0		 /* MOSI */
+#define GPIO_11_EN          0        /* CSn */
+#define GPIO_12_EN          0
+#define GPIO_13_EN          0
+#define GPIO_14_EN          0
 #define GPIO_15_EN          0        /* not configured */
 
 #define GPIO_IRQ_PRIO       1        /* priority */
@@ -151,14 +151,14 @@
 
 /* IRQ configurations that are the index of callback function in the callback function table.
  * Therefore, many pins can use a common callback function */
-#define GPIO_IRQ_0          GPIO_0    /* not configured */
-#define GPIO_IRQ_1          GPIO_0    /* not configured */
+#define GPIO_IRQ_0          GPIO_0    /* configured */
+#define GPIO_IRQ_1          GPIO_0    /* configured */
 #define GPIO_IRQ_2          GPIO_0    /* not configured */
 #define GPIO_IRQ_3          GPIO_0    /* not configured */
 #define GPIO_IRQ_4          GPIO_0    /* not configured */
 #define GPIO_IRQ_5          GPIO_0    /* not configured */
-#define GPIO_IRQ_6          GDO0_IRQ_INDEX    /* Index of GDO0 callback function */
-#define GPIO_IRQ_7          GDO2_IRQ_INDEX    /* Index of GDO2 callback function */
+#define GPIO_IRQ_6          GPIO_0    /* Index of GDO0 callback function */
+#define GPIO_IRQ_7          GPIO_0    /* Index of GDO2 callback function */
 #define GPIO_IRQ_8          GPIO_0    /* not configured */
 #define GPIO_IRQ_9          GPIO_0    /* not configured */
 #define GPIO_IRQ_10         GPIO_0    /* not configured */
