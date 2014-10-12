@@ -33,6 +33,10 @@ export CPU_USAGE = -mcpu=cortex-m3
 export FPU_USAGE =
 export CFLAGS += -ggdb -g3 -std=gnu99 -Os -Wall -Wstrict-prototypes $(CPU_USAGE) $(FPU_USAGE) -mlittle-endian -mthumb -mthumb-interwork -nostartfiles
 export CFLAGS += -ffunction-sections -fdata-sections -fno-builtin
+
+# Mboard-1 flags for st-std-periph lib
+export CFLAGS += -DHSE_VALUE=8000000
+
 export ASFLAGS += -ggdb -g3 $(CPU_USAGE) $(FPU_USAGE) -mlittle-endian
 export LINKFLAGS += -ggdb -g3 -std=gnu99 $(CPU_USAGE) $(FPU_USAGE) -mlittle-endian -static -lgcc -mthumb -mthumb-interwork -nostartfiles
 # $(LINKERSCRIPT) is specified in cpu/Makefile.include
