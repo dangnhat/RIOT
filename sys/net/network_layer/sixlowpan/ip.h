@@ -41,7 +41,8 @@
 #define MULTIHOP_HOPLIMIT           (64)
 
 #define SIXLOWIP_MAX_REGISTERED     (4)
-#define IP_PROCESS_STACKSIZE        (KERNEL_CONF_STACKSIZE_MAIN)
+//#define IP_PROCESS_STACKSIZE        (KERNEL_CONF_STACKSIZE_MAIN)
+#define IP_PROCESS_STACKSIZE        (KERNEL_CONF_STACKSIZE_DEFAULT) /* Nhat: reduced stack size */
 
 /* extern variables */
 extern uint8_t ipv6_ext_hdr_len;
